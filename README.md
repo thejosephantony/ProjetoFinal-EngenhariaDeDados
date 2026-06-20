@@ -2,24 +2,63 @@
 
 Projeto desenvolvido para a disciplina de **Engenharia de Dados**, ministrada pelo professor **André Britto de Carvalho**.
 
-O trabalho tem como objetivo desenvolver aplicações que realizem operações de CRUD em bancos de dados relacionais e não relacionais, além de preparar a base para uma futura etapa de integração de dados em um esquema estrela.
+O trabalho prático consiste no desenvolvimento de aplicações para bancos de dados relacionais e não relacionais, além da construção de rotinas de integração de dados em um banco modelado no formato de **esquema estrela**.
 
-## Objetivos do Projeto
+## Sumário
 
-- Implementar operações de **CRUD**: criação, leitura, atualização e exclusão de dados.
-- Desenvolver uma aplicação integrada a um banco de dados relacional.
-- Desenvolver uma aplicação integrada a um banco de dados NoSQL.
-- Mapear estruturas do modelo relacional para uma representação em MongoDB.
-- Discutir e implementar restrições de dados no modelo relacional e no modelo NoSQL.
-- Preparar o projeto para uma futura etapa de integração de dados.
+- [Objetivos](#objetivos)
+- [Fases do Trabalho](#fases-do-trabalho)
+- [Parte 1 — CRUD Relacional](#parte-1--crud-relacional)
+- [Parte 2 — CRUD NoSQL](#parte-2--crud-nosql)
+- [Parte 3 — Integração de Dados](#parte-3--integração-de-dados)
+- [Tecnologias Sugeridas](#tecnologias-sugeridas)
+- [Estrutura Sugerida do Projeto](#estrutura-sugerida-do-projeto)
+- [Como Executar](#como-executar)
+- [Relatório](#relatório)
+- [Checklist](#checklist)
+- [Equipe](#equipe)
+
+## Objetivos
+
+- Implementar operações de **CRUD** em banco de dados relacional.
+- Implementar operações de **CRUD** em banco de dados NoSQL.
+- Mapear estruturas do modelo relacional para o modelo orientado a documentos do MongoDB.
+- Discutir e implementar restrições de chave, integridade referencial, domínio e obrigatoriedade de campos.
+- Construir um modelo dimensional em **esquema estrela**.
+- Desenvolver pipelines de **ETL** para carregar dimensões e tabela fato.
+- Integrar dados provenientes de banco relacional e arquivos CSV externos.
+- Demonstrar o funcionamento das aplicações e pipelines na apresentação final.
 
 ## Fases do Trabalho
 
-O trabalho está dividido em três partes principais:
+O trabalho está dividido em três partes:
 
-### Parte 1 — CRUD Relacional
+1. **Parte 1 — CRUD Relacional**
+2. **Parte 2 — CRUD NoSQL**
+3. **Parte 3 — Integração de Dados**
 
-A primeira parte consiste no desenvolvimento de um programa capaz de executar operações de CRUD nas tabelas do esquema relacional trabalhado em aula.
+---
+
+# Parte 1 — CRUD Relacional
+
+A Parte 1 consiste no desenvolvimento de um programa que realiza operações de CRUD em tabelas de um banco de dados relacional.
+
+As operações esperadas são:
+
+- `INSERT`
+- `DELETE`
+- `UPDATE`
+- leitura/consulta de dados
+
+## Banco de Dados
+
+O banco de dados obrigatório para esta etapa é:
+
+- **PostgreSQL**
+- Hospedado na **AWS**
+- Contendo todas as tabelas do esquema relacional trabalhado na disciplina
+
+## Tabelas Relacionais
 
 As tabelas utilizadas são:
 
@@ -28,41 +67,13 @@ As tabelas utilizadas são:
 - `vinculo`
 - `curso`
 
-Nesta etapa, a aplicação deve se comunicar com um SGBD relacional e executar operações de manipulação de dados.
+## Entidades
 
-#### Banco de dados obrigatório
-
-- **PostgreSQL**
-- Hospedado na **AWS**
-- Deve conter todas as tabelas do esquema relacional
-
-### Parte 2 — CRUD NoSQL
-
-A segunda parte consiste no mapeamento das tabelas do modelo relacional para o banco de dados MongoDB e na implementação do CRUD correspondente.
-
-Nesta etapa, todas as estruturas do modelo relacional devem ser representadas no MongoDB.
-
-#### Banco de dados obrigatório
-
-- **MongoDB**
-- Hospedado na **AWS**
-- Deve conter todas as estruturas mapeadas a partir do esquema relacional
-
-### Parte 3 — Integração de Dados
-
-A terceira parte será definida posteriormente.
-
-A proposta geral é implementar rotinas de integração dos dados em um banco de dados no modelo de **esquema estrela**.
-
-## Modelagem Relacional
-
-O banco relacional deve conter as seguintes tabelas:
-
-### usuario
+### Usuário
 
 Representa os usuários cadastrados no sistema.
 
-Exemplos de atributos esperados:
+Exemplo de atributos:
 
 - `id_usuario`
 - `nome`
@@ -70,33 +81,33 @@ Exemplos de atributos esperados:
 - `senha`
 - `tipo_usuario`
 
-### estudante
+### Estudante
 
 Representa os estudantes vinculados ao sistema acadêmico.
 
-Exemplos de atributos esperados:
+Exemplo de atributos:
 
 - `id_estudante`
 - `matricula`
 - `id_usuario`
 - `data_nascimento`
 
-### curso
+### Curso
 
 Representa os cursos disponíveis.
 
-Exemplos de atributos esperados:
+Exemplo de atributos:
 
 - `id_curso`
 - `nome`
 - `codigo`
 - `carga_horaria`
 
-### vinculo
+### Vínculo
 
 Representa o vínculo entre estudante e curso.
 
-Exemplos de atributos esperados:
+Exemplo de atributos:
 
 - `id_vinculo`
 - `id_estudante`
@@ -104,186 +115,11 @@ Exemplos de atributos esperados:
 - `data_inicio`
 - `status`
 
-> Observação: os atributos devem ser ajustados de acordo com o esquema relacional trabalhado em aula.
-
-## Modelagem NoSQL
-
-O projeto lógico NoSQL consiste no mapeamento das tabelas relacionais para estruturas do MongoDB.
-
-Uma possível representação é:
-
-### Coleção `usuarios`
-
-Pode armazenar os dados básicos dos usuários.
-
-```json
-{
-  "_id": "ObjectId",
-  "nome": "Nome do usuário",
-  "email": "usuario@email.com",
-  "senha": "hash_da_senha",
-  "tipo_usuario": "estudante"
-}
-```
-
-### Coleção `estudantes`
-
-Pode armazenar os dados acadêmicos do estudante e referenciar o usuário correspondente.
-
-```json
-{
-  "_id": "ObjectId",
-  "matricula": "20260001",
-  "usuario_id": "ObjectId",
-  "data_nascimento": "2000-01-01"
-}
-```
-
-### Coleção `cursos`
-
-Pode armazenar os dados dos cursos.
-
-```json
-{
-  "_id": "ObjectId",
-  "nome": "Engenharia de Computação",
-  "codigo": "ECOMP",
-  "carga_horaria": 3600
-}
-```
-
-### Coleção `vinculos`
-
-Pode representar a associação entre estudantes e cursos.
-
-```json
-{
-  "_id": "ObjectId",
-  "estudante_id": "ObjectId",
-  "curso_id": "ObjectId",
-  "data_inicio": "2026-01-01",
-  "status": "ativo"
-}
-```
-
-## Restrições de Dados
-
-Durante o mapeamento para MongoDB, devem ser discutidas e tratadas as seguintes restrições:
-
-### Chave primária
-
-No PostgreSQL, as tabelas utilizam chaves primárias.
-
-No MongoDB, cada documento possui o campo `_id`, que funciona como identificador único.
-
-### Integridade referencial
-
-No PostgreSQL, a integridade referencial é garantida por chaves estrangeiras.
-
-No MongoDB, essa integridade pode ser tratada pela aplicação, validando se os documentos referenciados existem antes de inserir ou atualizar dados.
-
-### Domínio
-
-No PostgreSQL, o domínio pode ser controlado por tipos de dados, `CHECK constraints` e validações.
-
-No MongoDB, pode ser tratado por validação de schema e validações na aplicação.
-
-### NOT NULL
-
-No PostgreSQL, campos obrigatórios podem ser definidos com `NOT NULL`.
-
-No MongoDB, essa obrigatoriedade pode ser controlada com JSON Schema Validator e regras na camada da aplicação.
-
-## Tecnologias Sugeridas
-
-O grupo pode escolher livremente a linguagem de programação e o framework. Uma sugestão de stack é:
-
-### Back-end
-
-- Java 21
-- Spring Boot
-- Spring Data JPA
-- Spring Data MongoDB
-- Maven
-
-### Bancos de Dados
-
-- PostgreSQL
-- MongoDB
-- AWS RDS para PostgreSQL
-- MongoDB em instância EC2 ou serviço compatível hospedado na AWS
-
-### Ferramentas
-
-- Git
-- GitHub
-- Postman ou Insomnia
-- Docker, opcionalmente
-- DBeaver ou pgAdmin
-- MongoDB Compass
-
-## Estrutura Sugerida do Projeto
-
-```text
-engenharia-dados-crud/
-├── backend/
-│   ├── src/
-│   ├── pom.xml
-│   └── README.md
-├── database/
-│   ├── postgresql/
-│   │   ├── schema.sql
-│   │   └── seed.sql
-│   └── mongodb/
-│       ├── collections.json
-│       └── validators.js
-├── docs/
-│   ├── mapeamento-nosql.md
-│   ├── relatorio.md
-│   └── apresentacao.md
-├── README.md
-└── .gitignore
-```
-
-## Funcionalidades Esperadas
-
-A aplicação deve permitir operações de CRUD para as seguintes entidades:
-
-### Usuário
-
-- Cadastrar usuário
-- Listar usuários
-- Buscar usuário por ID
-- Atualizar usuário
-- Remover usuário
-
-### Estudante
-
-- Cadastrar estudante
-- Listar estudantes
-- Buscar estudante por ID
-- Atualizar estudante
-- Remover estudante
-
-### Curso
-
-- Cadastrar curso
-- Listar cursos
-- Buscar curso por ID
-- Atualizar curso
-- Remover curso
-
-### Vínculo
-
-- Cadastrar vínculo entre estudante e curso
-- Listar vínculos
-- Buscar vínculo por ID
-- Atualizar vínculo
-- Remover vínculo
+> Os atributos devem ser ajustados conforme o esquema relacional trabalhado em aula.
 
 ## Endpoints Sugeridos
 
-Caso o grupo utilize uma API REST, os seguintes endpoints podem ser adotados:
+Caso a aplicação seja desenvolvida como API REST, os endpoints podem seguir o seguinte padrão:
 
 ### Usuários
 
@@ -325,18 +161,509 @@ PUT /vinculos/{id}
 DELETE /vinculos/{id}
 ```
 
-## Como Executar o Projeto
+---
 
-### 1. Clonar o repositório
+# Parte 2 — CRUD NoSQL
+
+A Parte 2 consiste no mapeamento das tabelas relacionais para o banco de dados **MongoDB** e na implementação das operações de CRUD para as estruturas mapeadas.
+
+## Banco de Dados
+
+O banco de dados obrigatório para esta etapa é:
+
+- **MongoDB**
+- Hospedado na **AWS**
+- Contendo todas as estruturas mapeadas a partir do esquema relacional
+
+## Projeto Lógico NoSQL
+
+O projeto lógico NoSQL deve representar todas as tabelas relacionais no MongoDB.
+
+Além da implementação, o grupo deve discutir como garantir:
+
+- restrição de chave;
+- integridade referencial;
+- restrição de domínio;
+- restrição `NOT NULL`.
+
+## Mapeamento Sugerido
+
+### Coleção `usuarios`
+
+```json
+{
+  "_id": "ObjectId",
+  "nome": "Nome do usuário",
+  "email": "usuario@email.com",
+  "senha": "hash_da_senha",
+  "tipo_usuario": "estudante"
+}
+```
+
+### Coleção `estudantes`
+
+```json
+{
+  "_id": "ObjectId",
+  "matricula": "20260001",
+  "usuario_id": "ObjectId",
+  "data_nascimento": "2000-01-01"
+}
+```
+
+### Coleção `cursos`
+
+```json
+{
+  "_id": "ObjectId",
+  "nome": "Engenharia de Computação",
+  "codigo": "ECOMP",
+  "carga_horaria": 3600
+}
+```
+
+### Coleção `vinculos`
+
+```json
+{
+  "_id": "ObjectId",
+  "estudante_id": "ObjectId",
+  "curso_id": "ObjectId",
+  "data_inicio": "2026-01-01",
+  "status": "ativo"
+}
+```
+
+## Restrições no MongoDB
+
+### Chave
+
+No PostgreSQL, cada tabela possui uma chave primária.
+
+No MongoDB, cada documento possui o campo `_id`, que funciona como identificador único.
+
+### Integridade Referencial
+
+No PostgreSQL, a integridade referencial é garantida por chaves estrangeiras.
+
+No MongoDB, essa integridade deve ser tratada pela aplicação ou por validações adicionais, verificando se os documentos referenciados existem antes de inserir ou atualizar dados.
+
+### Domínio
+
+No PostgreSQL, as restrições de domínio podem ser controladas por tipos de dados, `CHECK constraints` e validações.
+
+No MongoDB, podem ser usadas validações via JSON Schema e validações na camada da aplicação.
+
+### NOT NULL
+
+No PostgreSQL, campos obrigatórios são definidos com `NOT NULL`.
+
+No MongoDB, essa obrigatoriedade pode ser representada com JSON Schema Validator e regras de validação na aplicação.
+
+---
+# Parte 3 — Integração de Dados
+
+A Parte 3 consiste na construção de um banco no formato de **esquema estrela** e no desenvolvimento de pipelines de **ETL** para preenchimento das tabelas de dimensão e da tabela de fatos.
+
+## Objetivo da Integração
+
+Integrar dados de diferentes fontes para construir uma base analítica sobre **turmas de graduação**, considerando professores, disciplinas, departamentos, semestres, campus e métricas acadêmicas.
+
+## Ferramenta de ETL
+
+A ferramenta obrigatória para as rotinas de integração é:
+
+- **Apache Hop**
+
+Os pipelines deverão carregar tanto as dimensões quanto a tabela fato.
+
+É permitido criar vários pipelines separados ou construir um workflow para executar todo o processo de integração.
+
+## Banco de Dados do Esquema Estrela
+
+O banco do esquema estrela deve estar disponível em um database no servidor **RDS da AWS**.
+
+Também deve ser criado um usuário específico para as rotinas de integração, com as permissões necessárias para povoamento do banco.
+
+## Fontes de Dados
+
+As fontes utilizadas na integração são:
+
+1. Banco de dados relacional da Parte 1, considerando:
+   - todas as linhas originais do script;
+   - linhas inseridas através do CRUD.
+
+2. Arquivos `.csv` do grupo **Ensino** do site dados.ufs.br:
+   - Unidades Acadêmicas;
+   - Componentes Curriculares;
+   - Docentes;
+   - Turmas.
+
+Para os arquivos de turmas, devem ser consideradas turmas de **2019 até 2025**.
+
+## Modelagem do Esquema Estrela
+
+O esquema estrela deve modelar a situação de turmas de graduação.
+
+### Dimensão Professor
+
+Os professores são definidos por:
+
+- nome;
+- tipo da jornada de trabalho;
+- formação;
+- departamento de lotação.
+
+Exemplo:
+
+```sql
+CREATE TABLE dim_professor (
+    id_professor SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    tipo_jornada VARCHAR(100),
+    formacao VARCHAR(100),
+    departamento_lotacao VARCHAR(100)
+);
+```
+
+### Dimensão Disciplina
+
+As disciplinas, ou componentes curriculares, são definidas por:
+
+- código;
+- nome;
+- departamento responsável;
+- número de créditos (`cr_total`).
+
+Exemplo:
+
+```sql
+CREATE TABLE dim_disciplina (
+    id_disciplina SERIAL PRIMARY KEY,
+    codigo VARCHAR(50) NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    departamento_responsavel VARCHAR(100),
+    cr_total INTEGER
+);
+```
+
+### Dimensão Departamento
+
+Os departamentos, ou unidades, são definidos por:
+
+- código ou sigla;
+- nome.
+
+Exemplo:
+
+```sql
+CREATE TABLE dim_departamento (
+    id_departamento SERIAL PRIMARY KEY,
+    codigo VARCHAR(50) NOT NULL,
+    nome VARCHAR(255) NOT NULL
+);
+```
+
+### Dimensão Semestre
+
+Os semestres são definidos por:
+
+- ano;
+- período.
+
+Exemplo:
+
+```sql
+CREATE TABLE dim_semestre (
+    id_semestre SERIAL PRIMARY KEY,
+    ano INTEGER NOT NULL,
+    periodo INTEGER NOT NULL
+);
+```
+
+### Dimensão Campus
+
+Representa o campus associado à turma.
+
+Exemplo:
+
+```sql
+CREATE TABLE dim_campus (
+    id_campus SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL
+);
+```
+
+### Tabela Fato Turma
+
+As turmas representam associações entre professores, disciplinas, departamentos, semestre e campus.
+
+A tabela fato deve conter métricas como:
+
+- número de discentes matriculados;
+- média de notas, quando disponível;
+- número de aprovados, quando disponível;
+- número de reprovados, quando disponível.
+
+Exemplo:
+
+```sql
+CREATE TABLE fato_turma (
+    id_fato_turma SERIAL PRIMARY KEY,
+
+    id_professor INTEGER REFERENCES dim_professor(id_professor),
+    id_disciplina INTEGER REFERENCES dim_disciplina(id_disciplina),
+    id_departamento INTEGER REFERENCES dim_departamento(id_departamento),
+    id_semestre INTEGER REFERENCES dim_semestre(id_semestre),
+    id_campus INTEGER REFERENCES dim_campus(id_campus),
+
+    numero_discentes_matriculados INTEGER,
+    media_notas NUMERIC(5,2),
+    numero_aprovados INTEGER,
+    numero_reprovados INTEGER
+);
+```
+
+## Fluxo Sugerido dos Pipelines
+
+### Pipeline 1 — Carga de Departamentos
+
+Fonte:
+
+- CSV de Unidades Acadêmicas
+
+Destino:
+
+- `dim_departamento`
+
+Transformações possíveis:
+
+- selecionar colunas necessárias;
+- remover duplicidades;
+- padronizar siglas;
+- tratar campos nulos.
+
+### Pipeline 2 — Carga de Disciplinas
+
+Fonte:
+
+- CSV de Componentes Curriculares
+
+Destino:
+
+- `dim_disciplina`
+
+Transformações possíveis:
+
+- selecionar código, nome, departamento responsável e créditos;
+- converter tipos;
+- remover registros duplicados;
+- validar departamento responsável.
+
+### Pipeline 3 — Carga de Professores
+
+Fonte:
+
+- CSV de Docentes
+
+Destino:
+
+- `dim_professor`
+
+Transformações possíveis:
+
+- selecionar nome, jornada, formação e departamento;
+- padronizar textos;
+- tratar ausência de dados;
+- remover duplicidades.
+
+### Pipeline 4 — Carga de Semestres
+
+Fonte:
+
+- CSV de Turmas
+
+Destino:
+
+- `dim_semestre`
+
+Transformações possíveis:
+
+- extrair ano e período;
+- considerar apenas turmas de 2019 até 2025;
+- remover duplicidades.
+
+### Pipeline 5 — Carga de Campus
+
+Fonte:
+
+- CSV de Turmas ou outra fonte disponível
+
+Destino:
+
+- `dim_campus`
+
+Transformações possíveis:
+
+- extrair campus;
+- padronizar nomes;
+- remover duplicidades.
+
+### Pipeline 6 — Carga da Tabela Fato
+
+Fontes:
+
+- CSV de Turmas;
+- banco relacional da Parte 1;
+- dimensões previamente carregadas.
+
+Destino:
+
+- `fato_turma`
+
+Transformações possíveis:
+
+- fazer lookup das dimensões;
+- calcular número de discentes matriculados;
+- calcular média de notas, quando disponível;
+- calcular número de aprovados;
+- calcular número de reprovados;
+- inserir registros na tabela fato.
+
+## Avaliação da Parte 3
+
+Na avaliação, as tabelas do esquema estrela estarão vazias.
+
+O grupo deverá:
+
+1. Executar os pipelines no Apache Hop.
+2. Carregar as dimensões.
+3. Carregar a tabela fato.
+4. Mostrar o efeito das rotinas no banco de dados.
+5. Demonstrar consultas SQL comprovando que os dados foram integrados.
+
+Exemplos de consultas para demonstração:
+
+```sql
+SELECT COUNT(*) FROM dim_professor;
+SELECT COUNT(*) FROM dim_disciplina;
+SELECT COUNT(*) FROM dim_departamento;
+SELECT COUNT(*) FROM dim_semestre;
+SELECT COUNT(*) FROM dim_campus;
+SELECT COUNT(*) FROM fato_turma;
+```
+
+Consulta analítica exemplo:
+
+```sql
+SELECT
+    s.ano,
+    s.periodo,
+    d.nome AS disciplina,
+    p.nome AS professor,
+    f.numero_discentes_matriculados,
+    f.media_notas,
+    f.numero_aprovados,
+    f.numero_reprovados
+FROM fato_turma f
+JOIN dim_semestre s ON s.id_semestre = f.id_semestre
+JOIN dim_disciplina d ON d.id_disciplina = f.id_disciplina
+JOIN dim_professor p ON p.id_professor = f.id_professor
+ORDER BY s.ano, s.periodo, d.nome;
+```
+
+---
+# Tecnologias Sugeridas
+
+A linguagem de programação e o framework são livres.
+
+Uma stack recomendada é:
+
+## Back-end
+
+- C# com ASP.NET Core Web API  
+ou
+- Java com Spring Boot  
+ou
+- Python com FastAPI
+
+## Bancos de Dados
+
+- PostgreSQL
+- MongoDB
+- AWS RDS
+- MongoDB hospedado na AWS
+
+## ETL
+
+- Apache Hop
+
+## Ferramentas de Apoio
+
+- Git
+- GitHub
+- Postman ou Insomnia
+- DBeaver ou pgAdmin
+- MongoDB Compass
+- Docker, opcionalmente
+
+---
+
+# Estrutura Sugerida do Projeto
+
+```text
+engenharia-dados-crud-etl/
+├── backend/
+│   ├── src/
+│   ├── README.md
+│   └── ...
+├── database/
+│   ├── postgresql/
+│   │   ├── schema.sql
+│   │   ├── seed.sql
+│   │   └── star_schema.sql
+│   └── mongodb/
+│       ├── collections.json
+│       └── validators.js
+├── etl/
+│   ├── pipelines/
+│   │   ├── carga_departamentos.hpl
+│   │   ├── carga_disciplinas.hpl
+│   │   ├── carga_professores.hpl
+│   │   ├── carga_semestres.hpl
+│   │   ├── carga_campus.hpl
+│   │   └── carga_fato_turma.hpl
+│   └── workflows/
+│       └── workflow_carga_dw.hwf
+├── data/
+│   ├── unidades_academicas/
+│   ├── componentes_curriculares/
+│   ├── docentes/
+│   └── turmas/
+├── docs/
+│   ├── mapeamento-nosql.md
+│   ├── esquema-estrela.md
+│   ├── etl-apache-hop.md
+│   ├── evidencias.md
+│   └── relatorio.md
+├── README.md
+└── .gitignore
+```
+
+---
+
+# Como Executar
+
+## 1. Clonar o Repositório
 
 ```bash
 git clone <url-do-repositorio>
-cd engenharia-dados-crud
+cd engenharia-dados-crud-etl
 ```
 
-### 2. Configurar o PostgreSQL
+## 2. Configurar PostgreSQL na AWS
 
-Crie o banco de dados PostgreSQL na AWS e configure as credenciais no arquivo de configuração da aplicação.
+Criar o banco PostgreSQL no RDS e configurar as credenciais da aplicação.
 
 Exemplo:
 
@@ -346,9 +673,17 @@ spring.datasource.username=<usuario>
 spring.datasource.password=<senha>
 ```
 
-### 3. Configurar o MongoDB
+Ou, em C#:
 
-Configure a string de conexão do MongoDB hospedado na AWS.
+```json
+{
+  "ConnectionStrings": {
+    "PostgreSQL": "Host=<host>;Port=5432;Database=<database>;Username=<usuario>;Password=<senha>"
+  }
+}
+```
+
+## 3. Configurar MongoDB na AWS
 
 Exemplo:
 
@@ -356,77 +691,200 @@ Exemplo:
 spring.data.mongodb.uri=mongodb://<usuario>:<senha>@<host>:27017/<database>
 ```
 
-### 4. Executar a aplicação
+Ou, em C#:
 
-Caso esteja usando Spring Boot:
+```json
+{
+  "MongoDB": {
+    "ConnectionString": "mongodb://<usuario>:<senha>@<host>:27017",
+    "DatabaseName": "<database>"
+  }
+}
+```
+
+## 4. Executar o Back-end
+
+Exemplo usando Spring Boot:
 
 ```bash
 cd backend
 mvn spring-boot:run
 ```
 
-### 5. Testar os endpoints
+Exemplo usando ASP.NET Core:
 
-Utilize Postman, Insomnia ou outra ferramenta para testar as operações de CRUD.
+```bash
+cd backend
+dotnet run
+```
 
-## Relatório
+## 5. Testar o CRUD
+
+Utilizar Postman, Insomnia ou ferramenta semelhante para testar:
+
+- usuários;
+- estudantes;
+- cursos;
+- vínculos.
+
+## 6. Executar os Pipelines no Apache Hop
+
+Abrir o Apache Hop e executar os pipelines da pasta:
+
+```text
+etl/pipelines/
+```
+
+Ou executar o workflow principal:
+
+```text
+etl/workflows/workflow_carga_dw.hwf
+```
+
+---
+
+# Relatório
 
 O relatório deve apresentar:
 
-- Descrição do projeto.
-- Tecnologias utilizadas.
-- Modelo relacional utilizado.
-- Mapeamento do modelo relacional para MongoDB.
-- Discussão sobre restrições:
-  - chave primária;
+- descrição do projeto;
+- tecnologias utilizadas;
+- modelo relacional utilizado;
+- implementação do CRUD relacional;
+- mapeamento do modelo relacional para MongoDB;
+- implementação do CRUD NoSQL;
+- discussão sobre restrições no MongoDB:
+  - chave;
   - integridade referencial;
   - domínio;
-  - campos obrigatórios.
-- Explicação das operações de CRUD implementadas.
-- Evidências do efeito de cada método no banco de dados.
-- Prints, logs ou exemplos de requisições e respostas.
-- Link para o repositório do código-fonte.
+  - `NOT NULL`;
+- modelagem do esquema estrela;
+- descrição das dimensões;
+- descrição da tabela fato;
+- fontes de dados utilizadas;
+- explicação dos pipelines no Apache Hop;
+- evidências dos efeitos dos métodos no banco de dados;
+- evidências da execução dos pipelines;
+- consultas SQL comprovando o povoamento do esquema estrela;
+- link para o repositório do código-fonte.
 
-## Evidências Esperadas
+---
 
-Para cada operação de CRUD, recomenda-se apresentar:
+# Evidências Esperadas
 
-- Requisição realizada.
-- Resposta da aplicação.
-- Estado do banco antes ou depois da operação.
-- Print ou consulta comprovando o efeito no banco.
+Para cada método CRUD, recomenda-se apresentar:
 
-Exemplo:
+- requisição realizada;
+- resposta da aplicação;
+- estado do banco antes e depois da operação;
+- print ou consulta comprovando o efeito no banco.
+
+Exemplo PostgreSQL:
 
 ```sql
 SELECT * FROM usuario;
 ```
 
-Exemplo no MongoDB:
+Exemplo MongoDB:
 
 ```javascript
 db.usuarios.find();
 ```
 
-## Status do Projeto
+Para a Parte 3, recomenda-se apresentar:
 
-- [ ] Criar estrutura do repositório
+- prints dos pipelines no Apache Hop;
+- logs de execução;
+- consultas SQL antes da execução;
+- consultas SQL depois da execução;
+- contagem de registros nas dimensões;
+- contagem de registros na tabela fato;
+- consulta analítica usando joins entre fato e dimensões.
+
+---
+
+# Checklist
+
+## Parte 1 — CRUD Relacional
+
+- [ ] Criar repositório no GitHub
 - [ ] Criar banco PostgreSQL na AWS
 - [ ] Criar tabelas relacionais
-- [ ] Implementar CRUD relacional
+- [ ] Criar usuário de acesso ao banco
+- [ ] Implementar CRUD de usuário
+- [ ] Implementar CRUD de estudante
+- [ ] Implementar CRUD de curso
+- [ ] Implementar CRUD de vínculo
+- [ ] Testar operações no Postman/Insomnia
+- [ ] Registrar evidências no banco
+
+## Parte 2 — CRUD NoSQL
+
 - [ ] Criar banco MongoDB na AWS
-- [ ] Mapear tabelas relacionais para MongoDB
-- [ ] Implementar CRUD NoSQL
-- [ ] Documentar restrições no NoSQL
-- [ ] Registrar evidências dos métodos
-- [ ] Elaborar relatório
-- [ ] Preparar apresentação final
+- [ ] Pesquisar modelos NoSQL
+- [ ] Mapear tabelas relacionais para coleções MongoDB
+- [ ] Implementar validações de chave
+- [ ] Implementar validações de integridade referencial
+- [ ] Implementar validações de domínio
+- [ ] Implementar validações de campos obrigatórios
+- [ ] Implementar CRUD de usuários
+- [ ] Implementar CRUD de estudantes
+- [ ] Implementar CRUD de cursos
+- [ ] Implementar CRUD de vínculos
+- [ ] Registrar evidências no banco
 
-## Equipe
+## Parte 3 — Integração de Dados
 
+- [ ] Criar database do esquema estrela no RDS
+- [ ] Criar usuário para rotinas de integração
+- [ ] Criar tabelas de dimensão
+- [ ] Criar tabela fato
+- [ ] Baixar CSVs de Unidades Acadêmicas
+- [ ] Baixar CSVs de Componentes Curriculares
+- [ ] Baixar CSVs de Docentes
+- [ ] Baixar CSVs de Turmas
+- [ ] Filtrar turmas de 2019 até 2025
+- [ ] Criar pipeline de departamentos
+- [ ] Criar pipeline de disciplinas
+- [ ] Criar pipeline de professores
+- [ ] Criar pipeline de semestres
+- [ ] Criar pipeline de campus
+- [ ] Criar pipeline da tabela fato
+- [ ] Criar workflow de execução, se necessário
+- [ ] Testar carga com tabelas vazias
+- [ ] Registrar evidências da execução dos pipelines
 
-## Observações
+## Documentação e Apresentação
 
-Este projeto segue as orientações do trabalho prático da disciplina de Engenharia de Dados 2026.1.
+- [ ] Criar relatório
+- [ ] Documentar mapeamento NoSQL
+- [ ] Documentar esquema estrela
+- [ ] Documentar pipelines do Apache Hop
+- [ ] Adicionar prints e evidências
+- [ ] Preparar roteiro de apresentação
+- [ ] Validar execução completa antes da avaliação
 
-O código-fonte deve ser disponibilizado, preferencialmente, em um repositório GitHub ou ferramenta similar. Durante a apresentação, o grupo deverá demonstrar o funcionamento da aplicação e o efeito das operações no banco de dados.
+---
+
+# Equipe
+
+Adicionar os integrantes do grupo:
+
+- Nome do integrante 1
+- Nome do integrante 2
+- Nome do integrante 3
+
+---
+
+# Observações
+
+Este projeto segue as orientações do Trabalho Prático de Engenharia de Dados 2026.1.
+
+O código-fonte deve ser disponibilizado, preferencialmente, em um repositório GitHub ou ferramenta similar.
+
+Na apresentação final, o grupo deverá demonstrar:
+
+- funcionamento do CRUD relacional;
+- funcionamento do CRUD NoSQL;
+- execução dos pipelines no Apache Hop;
+- efeito das operações e integrações nos bancos de dados.
