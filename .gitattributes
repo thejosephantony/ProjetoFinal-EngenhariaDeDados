@@ -1,2 +1,25 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Java / Maven
+**/target/
+*.class
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Variáveis locais / senhas
+.env
+.env.*
+application-local.properties
+
+# Node, caso use depois na Parte 2 ou frontend
+node_modules/
+dist/
+build/
