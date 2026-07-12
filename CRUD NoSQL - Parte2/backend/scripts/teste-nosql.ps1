@@ -1,4 +1,4 @@
-# test-nosql.ps1 - Teste CRUD NoSQL
+# test-nosql-prints.ps1
 [Console]::OutputEncoding = [System.Text.Encoding]::UTF8
 $OutputEncoding = [System.Text.Encoding]::UTF8
 
@@ -6,16 +6,16 @@ $baseUri = "http://localhost:8081/api/nosql/estudantes"
 $cpf = "33333333302"
 $matricula = "999001"
 
+Write-Host "=============================================================" -ForegroundColor Cyan
+Write-Host "TESTE CRUD NOSQL" -ForegroundColor Cyan
+Write-Host "CPF: $cpf  |  Matricula: $matricula" -ForegroundColor Cyan
+Write-Host "=============================================================" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "=============================================================" -ForegroundColor Cyan
-Write-Host "    TESTE CRUD NOSQL - ESTUDANTE (MongoDB)" -ForegroundColor Cyan
-Write-Host "    CPF: $cpf  |  Matricula: $matricula" -ForegroundColor Cyan
-Write-Host "=============================================================" -ForegroundColor Cyan
+Write-Host "Abra o MongoDB Compass na colecao 'estudantes'." -ForegroundColor Yellow
+Read-Host "Pressione Enter para comecar (certifique-se que a colecao esta vazia)"
 
-# 1. CRIAR (POST)
-Write-Host ""
+# 1. CREATE
 Write-Host "[1] CRIANDO ESTUDANTE..." -ForegroundColor Yellow
-
 $bodyCreate = @{
     cpf = $cpf
     nome = "Joao NoSQL"
@@ -45,46 +45,38 @@ $bodyCreate = @{
 } | ConvertTo-Json -Depth 5
 
 try {
-    $responseCreate = Invoke-RestMethod -Uri $baseUri -Method Post -ContentType "application/json; charset=utf-8" -Body $bodyCreate
-    Write-Host "SUCESSO: Estudante criado (ID: $($responseCreate.id))" -ForegroundColor Green
-    Write-Host "  Nome: $($responseCreate.nome), MC: $($responseCreate.mc)" -ForegroundColor Green
+    $r = Invoke-RestMethod -Uri $baseUri -Method Post -ContentType "application/json; charset=utf-8" -Body $bodyCreate
+    Write-Host "SUCESSO: Criado (ID: $($r.id))" -ForegroundColor Green
+    Write-Host "Nome: $($r.nome), MC: $($r.mc)" -ForegroundColor Green
 } catch {
     Write-Host "ERRO: $($_.Exception.Message)" -ForegroundColor Red
     exit 1
 }
 
-# 2. LISTAR TODOS (GET)
 Write-Host ""
-Write-Host "[2] LISTANDO TODOS OS ESTUDANTES..." -ForegroundColor Yellow
+Write-Host "Atualize o Compass (Refresh) e verifique." -ForegroundColor Yellow
+Read-Host "Pressione Enter para continuar"
 
+# 2. LIST ALL
+Write-Host "[2] LISTANDO TODOS..." -ForegroundColor Yellow
 try {
-    $responseList = Invoke-RestMethod -Uri $baseUri -Method Get
-    Write-Host "Total de estudantes: $($responseList.Count)" -ForegroundColor Cyan
+    $list = Invoke-RestMethod -Uri $baseUri -Method Get
+    Write-Host "Total: $($list.Count)" -ForegroundColor Cyan
 } catch {
     Write-Host "ERRO: $($_.Exception.Message)" -ForegroundColor Red
-    exit 1
 }
 
-# 3. BUSCAR POR CPF (GET)
-Write-Host ""
-Write-Host "[3] BUSCANDO ESTUDANTE PELO CPF: $cpf..." -ForegroundColor Yellow
-
+# 3. GET BY CPF
+Write-Host "[3] BUSCANDO POR CPF..." -ForegroundColor Yellow
 try {
-    $responseGet = Invoke-RestMethod -Uri "$baseUri/$cpf" -Method Get
-    Write-Host "Estudante encontrado:" -ForegroundColor Green
-    Write-Host "  Nome: $($responseGet.nome)" -ForegroundColor Green
-    Write-Host "  Matricula: $($responseGet.matricula)" -ForegroundColor Green
-    Write-Host "  MC: $($responseGet.mc)" -ForegroundColor Green
-    Write-Host "  Ano Ingresso: $($responseGet.anoIngresso)" -ForegroundColor Green
+    $get = Invoke-RestMethod -Uri "$baseUri/$cpf" -Method Get
+    Write-Host "Encontrado: Nome $($get.nome), MC $($get.mc), Ano $($get.anoIngresso)" -ForegroundColor Green
 } catch {
     Write-Host "ERRO: $($_.Exception.Message)" -ForegroundColor Red
-    exit 1
 }
 
-# 4. ATUALIZAR (PUT)
-Write-Host ""
-Write-Host "[4] ATUALIZANDO ESTUDANTE (MC=90, Ano=2026)..." -ForegroundColor Yellow
-
+# 4. UPDATE (PUT)
+Write-Host "[4] ATUALIZANDO (MC=90, Ano=2026)..." -ForegroundColor Yellow
 $bodyUpdate = @{
     cpf = $cpf
     nome = "Joao NoSQL Atualizado"
@@ -114,47 +106,50 @@ $bodyUpdate = @{
 } | ConvertTo-Json -Depth 5
 
 try {
-    $responseUpdate = Invoke-RestMethod -Uri "$baseUri/$cpf" -Method Put -ContentType "application/json; charset=utf-8" -Body $bodyUpdate
-    Write-Host "SUCESSO: Estudante atualizado!" -ForegroundColor Green
-    Write-Host "  MC: $($responseUpdate.mc) (antes era 85)" -ForegroundColor Green
-    Write-Host "  Ano Ingresso: $($responseUpdate.anoIngresso) (antes era 2025)" -ForegroundColor Green
+    $u = Invoke-RestMethod -Uri "$baseUri/$cpf" -Method Put -ContentType "application/json; charset=utf-8" -Body $bodyUpdate
+    Write-Host "SUCESSO: Atualizado! MC: $($u.mc) (antes 85), Ano: $($u.anoIngresso) (antes 2025)" -ForegroundColor Green
 } catch {
     Write-Host "ERRO: $($_.Exception.Message)" -ForegroundColor Red
     exit 1
 }
 
-# 5. DELETAR (DELETE)
 Write-Host ""
-Write-Host "[5] DELETANDO ESTUDANTE (CPF: $cpf)..." -ForegroundColor Yellow
+Write-Host "Atualize o Compass (Refresh) e verifique o documento atualizado." -ForegroundColor Yellow
+Read-Host "Pressione Enter para continuar"
 
+# 5. DELETE
+Write-Host "[5] DELETANDO..." -ForegroundColor Yellow
 try {
     Invoke-RestMethod -Uri "$baseUri/$cpf" -Method Delete
-    Write-Host "SUCESSO: Estudante removido!" -ForegroundColor Green
+    Write-Host "SUCESSO: Removido!" -ForegroundColor Green
 } catch {
     if ($_.Exception.Response.StatusCode -eq 404) {
-        Write-Host "AVISO: Estudante ja havia sido removido (404)" -ForegroundColor Yellow
+        Write-Host "AVISO: Ja removido (404)" -ForegroundColor Yellow
     } else {
         Write-Host "ERRO: $($_.Exception.Message)" -ForegroundColor Red
         exit 1
     }
 }
 
-# 6. CONFIRMAR REMOCAO
 Write-Host ""
-Write-Host "[6] CONFIRMANDO REMOCAO..." -ForegroundColor Yellow
+Write-Host "Atualize o Compass (Refresh) e verifique que o documento sumiu." -ForegroundColor Yellow
+Read-Host "Pressione Enter para continuar"
 
+# 6. CONFIRMAR REMOCAO
+Write-Host "[6] CONFIRMANDO REMOCAO..." -ForegroundColor Yellow
 try {
-    $responseConfirm = Invoke-RestMethod -Uri "$baseUri/$cpf" -Method Get
+    $confirm = Invoke-RestMethod -Uri "$baseUri/$cpf" -Method Get
     Write-Host "ATENCAO: Estudante ainda existe!" -ForegroundColor Red
 } catch {
     if ($_.Exception.Response.StatusCode -eq 404) {
-        Write-Host "CONFIRMADO: Estudante nao encontrado (404) - Remocao bem-sucedida!" -ForegroundColor Green
+        Write-Host "CONFIRMADO: Nao encontrado (404) - Remocao bem-sucedida!" -ForegroundColor Green
     } else {
-        Write-Host "ERRO: $($_.Exception.Message)" -ForegroundColor Red
+        Write-Host "ERRO INESPERADO: $($_.Exception.Message)" -ForegroundColor Red
     }
 }
 
 Write-Host ""
 Write-Host "=============================================================" -ForegroundColor Cyan
-Write-Host "    TESTE NOSQL CONCLUIDO COM SUCESSO!" -ForegroundColor Cyan
+Write-Host "TESTE CONCLUIDO" -ForegroundColor Cyan
 Write-Host "=============================================================" -ForegroundColor Cyan
+Write-Host ""
