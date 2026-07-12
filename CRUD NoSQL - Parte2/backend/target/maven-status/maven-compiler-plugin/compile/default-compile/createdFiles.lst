@@ -1,0 +1,13 @@
+br\ufs\engenhariadados\dto\VinculoDTO.class
+br\ufs\engenhariadados\service\EstudanteNoSqlService.class
+br\ufs\engenhariadados\exception\GlobalExceptionHandler.class
+br\ufs\engenhariadados\EngenhariaDadosNoSqlApplication.class
+br\ufs\engenhariadados\model\nosql\Vinculo.class
+br\ufs\engenhariadados\exception\ResourceNotFoundException.class
+br\ufs\engenhariadados\repository\EstudanteNoSqlRepository.class
+br\ufs\engenhariadados\dto\EstudanteResponseDTO.class
+br\ufs\engenhariadados\model\nosql\CursoVinculo.class
+br\ufs\engenhariadados\model\nosql\EstudanteDocument.class
+br\ufs\engenhariadados\controller\EstudanteNoSqlController.class
+br\ufs\engenhariadados\dto\CursoVinculoDTO.class
+br\ufs\engenhariadados\dto\EstudanteRequestDTO.class
